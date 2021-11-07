@@ -36,19 +36,4 @@ for (a in anos){
   }
 }
 
-pago_educacion = function(df){
-  pago = df %>% filter(CODIGO == "A.1") %>% select("PAGOS(Pesos)")
-  pago = gsub(",", ".", pago)
-  print(pago)
-  return(pago %>% as.double())
-}
 
-pagos = lapply(chip, pago_educacion)
-
-# Hay un outlier
-Pagos_Educacion = unlist(pagos)
-hist(Pagos_Educacion)
-
-# No hay lío, es solo Medellín
-names["210105001"]
-hist(log10(Pagos_Educacion), breaks=15)
