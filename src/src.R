@@ -36,6 +36,33 @@ for (a in anos){
   }
 }
 
+pagos_educacion= function(df) {
+  pago=df %>% if (CODIGO=="A.1"){select("PAGOS(Pesos)")}
+  
+  
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pago_educacion = function(df){
   pago = df %>% filter(CODIGO == "A.1") %>% select("PAGOS(Pesos)")
   pago = gsub(",", ".", pago)
