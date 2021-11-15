@@ -1,9 +1,8 @@
 # Nombres y códigos
-library(rio)
-library(tidyverse)
-library(skimr)
 
-rm(list = ls())
+rm(list = ls()) 
+if(!require(pacman)) install.packages("pacman") ; require(pacman)
+p_load(rio, tidyverse, skimr)
 
 ################
 #   PUNTO 1    #
@@ -47,7 +46,6 @@ pago_educ = function(lista_n,tipo_rubro){
 ################
 
 pagos = lapply(list_chip, pago_educ, tipo_rubro="EDUCACIÓN")
-
 
 
 
