@@ -5,60 +5,28 @@ library(skimr)
 
 rm(list = ls())
 
-chip = list()
-anos = 2017:2020
-names = list()
-
 ################
 #   PUNTO 1    #
 ################
 
-for (a in anos){
-  for (file in list.files(paste0('./data/input/', a) , '.xls', full.names = T)){
-    # Leo la celda con el nombre y el identificador
-    id = import(file, col_names = F, range="A3:A3")
-    
-    # Guardo el nombre del municipio y el código por separado
-    # El [[1]] es solo porque el output está como lista, por lo que extraigo el elemento
-    id = str_split(id[[1]], " - ", 2)[[1]]
-    # Guardo el resultado en una lista (no lo uso despues, pero fue util para explorar)
-    names[[id[1]]] = id[2]
-    
-    # Importo la base de datos
-    df = import(file, col_names = T, skip = 9)
-    
-    # Importo el periodo
-    periodo = import(file, col_names = F, range="A5:A5")
+# punto 1
+paths = lapply(2017:2020 , function(x) list.files(paste0("./data/input/",x),full.names=T)) %>%
+  unlist()
 
-    # Agrego varios datos como columnas para facilitarme la vida
-    df$periodo = periodo[[1]]
-    df$municipio = id[2]
-    df$cod_dane = id[1]
-    
-    # Miro cuantas veces aparece el mismo municiipio para el mismo año
-    nombre = paste0(a, '_', id[1])
-    ocurrencias_pasadas = length(grep(nombre, names(chip)))
-    # Si es distinto de 0 cambio el nombre para no reemplazar los datos de antes
-    if (ocurrencias_pasadas != 0){
-      nombre = paste0(nombre, "_", ocurrencias_pasadas)
-    }
-    
-    # Agrego df a chip. El nombre es el año y el código identificador
-    chip[[nombre]] = df
-  }
+list_chip = list()
+for (i in 1:length(paths)){
+  list_chip[[i]] = import(file = paths[i])  
 }
 
-  
 
 ################
-#   PUNTO 2    #PROPUESTA
+#   PUNTO 2    #
 ################
 
-pago_educ = function(n,lista,tipo_rubro){
+pago_educ = function(lista_n,tipo_rubro){
   
   # crear df
   df = data.frame(valor=NA,cod_dane=NA,periodo=NA)  
-  lista_n = lista[[n]] 
   
   # extraer codigo dane
   df$cod_dane = colnames(lista_n)[1]
@@ -73,40 +41,15 @@ pago_educ = function(n,lista,tipo_rubro){
   return(df)  
 }
 
-pago_educ(n = 10 , lista = list_chip , tipo_rubro = "EDUCACIÓN")
-
-
-
-
-
-pago_educacion = function(df){
-  pago = df %>% filter(CODIGO == "A.1") %>% 
-    select("PAGOS(Pesos)", "periodo", "cod_dane")
-  return(pago)
-}
 
 ################
-#   PUNTO 3    #PROPUESTA
+#   PUNTO 3    #
 ################
 
-pagos = lapply(chip, pago_educacion)
+pagos = lapply(list_chip, pago_educ, tipo_rubro="EDUCACIÓN")
 
 
 
 
-# punto 1
-paths = lapply(2017:2020 , function(x) list.files(paste0("./data/input/",x),full.names=T)) %>%
-  unlist()
 
-list_chip = list()
-for (i in 1:length(paths)){
-  list_chip[[i]] = import(file = paths[i])  
-}
-
-pago_educ = function(n,lista,tipo_rubro){
-  lista_n = lista[[n]] 
-  colnames(lista_n) = lista_n[7,]
-  valor = lista_n %>% subset(NOMBRE==tipo_rubro) %>% select(`PAGOS(Pesos)`)
-  return(valor)  
-}
 
