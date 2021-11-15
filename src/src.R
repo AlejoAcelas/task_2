@@ -2,10 +2,8 @@
 # Elaborado por: Angelica Alvarez(201921780), Sebastian Marin (201814126) y Alejandro Acelas (201819695)
 
 
-library(rio)
-library(tidyverse)
-library(skimr)
-
+if(!require(pacman)) install.packages("pacman") ; require(pacman)
+p_load(rio, tidyverse, skimr)
 rm(list = ls())
 
 ################
@@ -16,9 +14,9 @@ rm(list = ls())
 paths = lapply(2017:2020 , function(x) list.files(paste0("./data/input/",x),full.names=T)) %>%
   unlist()
 
-list_chip = list()
+chip = list()
 for (i in 1:length(paths)){
-  list_chip[[i]] = import(file = paths[i])  
+  chip[[i]] = import(file = paths[i])  
 }
 
 
@@ -49,7 +47,7 @@ pago_educ = function(lista_n,tipo_rubro){
 #   PUNTO 3    #
 ################
 
-pagos = lapply(list_chip, pago_educ, tipo_rubro="EDUCACIÓN")
+pagos = lapply(chip, pago_educ, tipo_rubro="EDUCACIÓN")
 
 
 
