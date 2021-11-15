@@ -1,4 +1,7 @@
-# Nombres y códigos
+# Version R 4.1.1
+# Elaborado por: Angelica Alvarez(201921780), Sebastian Marin (201814126) y Alejandro Acelas (201819695)
+
+
 library(rio)
 library(tidyverse)
 library(skimr)
